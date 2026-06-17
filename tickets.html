@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>An Unreal Event | Tickets — Vancouver</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-purple: #b026ff;
+            --neon-blue: #00d4ff;
+            --deep-black: #050508;
+            --dark-blue: #0a1128;
+            --mid-purple: #7b2cbf;
+            --grid-line: rgba(176, 38, 255, 0.12);
+            --success: #00ff88;
+            --danger: #ff3366;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--deep-black);
+            color: #e0e0e0;
+            font-family: 'Rajdhani', sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .grid-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(var(--grid-line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+            background-size: 80px 80px;
+            perspective: 800px;
+            animation: gridMove 25s linear infinite;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(80px); }
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--neon-purple);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--neon-purple);
+            animation: floatUp linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 18px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(5, 5, 8, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(176, 38, 255, 0.2);
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 900;
+            color: var(--neon-purple);
+            text-shadow: 0 0 20px var(--neon-purple);
+            letter-spacing: 4px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            border: 2px solid var(--neon-purple);
+            transform: rotate(45deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 15px var(--neon-purple);
+        }
+
+        .logo-icon span {
+            transform: rotate(-45deg);
+            font-size: 0.9rem;
+            font-weight: 900;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #e0e0e0;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--neon-blue);
+            box-shadow: 0 0 10px var(--neon-blue);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--neon-blue);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .hero {
+            position: relative;
+            height: 45vh;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            z-index: 10;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 60%;
+            background: linear-gradient(to top, var(--deep-black), transparent);
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 8px 24px;
+            border: 1px solid var(--neon-blue);
+            background: rgba(0, 212, 255, 0.08);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.85rem;
+            letter-spacing: 4px;
+            color: var(--neon-blue);
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .glitch-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(2rem, 5vw, 4rem);
+            font-weight: 900;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 8px;
+            text-shadow: 0 0 10px var(--neon-purple), 0 0 40px var(--neon-purple), 0 0 80px var(--neon-purple);
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--neon-blue);
+            letter-spacing: 4px;
+            margin-top: 15px;
+            text-transform: uppercase;
+            text-shadow: 0 0 15px var(--neon-blue);
+            font-weight: 300;
+        }
+
+        /* TICKET SECTION */
+        .ticket-section {
+            position: relative;
+            z-index: 10;
+            padding: 60px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            text-align: center;
+            margin-bottom: 50px;
+            color: #fff;
+            text-shadow: 0 0 20px var(--neon-blue);
+            letter-spacing: 4px;
+        }
+
+        .ticket-card {
+            background: rgba(10, 17, 40, 0.7);
+            border: 1px solid rgba(176, 38, 255, 0.25);
+            padding: 40px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+            clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
+            transition: all 0.3s;
+        }
+
+        .ticket-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--neon-purple), var(--neon-blue), var(--neon-purple));
+            background-size: 200% 100%;
+            animation: shimmer 3s linear infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .ticket-card:hover {
+            border-color: var(--neon-blue);
+            box-shadow: 0 10px 40px rgba(0, 212, 255, 0.1);
+        }
+
+        .ticket-card.selected {
+            border-color: var(--neon-purple);
+            box-shadow: 0 0 30px rgba(176, 38, 255, 0.2), inset 0 0 30px rgba(176, 38, 255, 0.05);
+            background: rgba(176, 38, 255, 0.08);
+        }
+
+        .ticket-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .ticket-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            color: #fff;
+            letter-spacing: 3px;
+        }
+
+        .ticket-price {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1.6rem;
+            color: var(--neon-blue);
+            text-shadow: 0 0 15px var(--neon-blue);
+        }
+
+        .ticket-desc {
+            color: rgba(224, 224, 224, 0.6);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .ticket-meta {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .meta-tag {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--neon-purple);
+            letter-spacing: 2px;
+            padding: 4px 12px;
+            border: 1px solid rgba(176, 38, 255, 0.3);
+            background: rgba(176, 38, 255, 0.05);
+        }
+
+        .qty-control {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .qty-label {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.85rem;
+            color: rgba(224, 224, 224, 0.7);
+            letter-spacing: 2px;
+        }
+
+        .qty-btn {
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid var(--neon-blue);
+            color: var(--neon-blue);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qty-btn:hover {
+            background: var(--neon-blue);
+            color: var(--deep-black);
+            box-shadow: 0 0 15px var(--neon-blue);
+        }
+
+        .qty-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .qty-display {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1.3rem;
+            color: #fff;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .ticket-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 15px;
+            cursor: pointer;
+            padding: 10px 0;
+        }
+
+        .custom-checkbox {
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--neon-purple);
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .custom-checkbox.checked {
+            background: var(--neon-purple);
+            box-shadow: 0 0 15px var(--neon-purple);
+        }
+
+        .custom-checkbox.checked::after {
+            content: '✓';
+            color: #fff;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .checkbox-label {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.9rem;
+            color: rgba(224, 224, 224, 0.8);
+            letter-spacing: 1px;
+        }
+
+        /* CHECKOUT */
+        .checkout-section {
+            position: relative;
+            z-index: 10;
+            padding: 60px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .checkout-card {
+            background: rgba(10, 17, 40, 0.8);
+            border: 2px solid var(--neon-purple);
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+            clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
+        }
+
+        .checkout-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--neon-purple), var(--neon-blue));
+        }
+
+        .checkout-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: #fff;
+            letter-spacing: 4px;
+            margin-bottom: 30px;
+            text-shadow: 0 0 15px var(--neon-purple);
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            font-size: 1rem;
+        }
+
+        .summary-row .label {
+            color: rgba(224, 224, 224, 0.7);
+            font-family: 'Share Tech Mono', monospace;
+            letter-spacing: 1px;
+        }
+
+        .summary-row .value {
+            font-family: 'Share Tech Mono', monospace;
+            color: #fff;
+        }
+
+        .summary-row.subtotal .value {
+            color: var(--neon-blue);
+        }
+
+        .summary-row.tax .value {
+            color: var(--neon-purple);
+        }
+
+        .summary-row.total {
+            border-top: 2px solid var(--neon-purple);
+            border-bottom: none;
+            margin-top: 10px;
+            padding-top: 20px;
+        }
+
+        .summary-row.total .label {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            color: #fff;
+        }
+
+        .summary-row.total .value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: var(--success);
+            text-shadow: 0 0 20px var(--success);
+        }
+
+        .tax-note {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.75rem;
+            color: rgba(224, 224, 224, 0.4);
+            margin-top: 5px;
+            letter-spacing: 1px;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            margin-top: 35px;
+            padding: 20px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            color: #fff;
+            background: linear-gradient(135deg, var(--neon-purple), var(--mid-purple));
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            clip-path: polygon(5% 0, 100% 0, 95% 100%, 0% 100%);
+            transition: all 0.3s;
+            text-shadow: 0 0 10px rgba(255,255,255,0.5);
+        }
+
+        .checkout-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .checkout-btn:hover::before {
+            left: 100%;
+        }
+
+        .checkout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 50px rgba(176, 38, 255, 0.4);
+        }
+
+        .checkout-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .checkout-btn:disabled::before {
+            display: none;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: rgba(224, 224, 224, 0.4);
+            font-family: 'Share Tech Mono', monospace;
+            letter-spacing: 2px;
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            display: block;
+            opacity: 0.5;
+        }
+
+        /* Scanline */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.08), rgba(0,0,0,0.08) 1px, transparent 1px, transparent 3px);
+            z-index: 9999;
+            pointer-events: none;
+            opacity: 0.25;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav { padding: 15px 20px; }
+            .nav-links { gap: 18px; }
+            .nav-links a { font-size: 0.75rem; letter-spacing: 1px; }
+            .ticket-section, .checkout-section { padding: 30px 20px; }
+            .ticket-card, .checkout-card { padding: 25px; }
+            .ticket-header { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
+<base target="_blank">
+</head>
+<body>
+    <div class="grid-bg"></div>
+    <div class="particles" id="particles"></div>
+    <div class="scanlines"></div>
+
+    <nav>
+        <a href="index.html" class="logo">
+            <div class="logo-icon"><span>U</span></div>
+            UNREAL EVENT
+        </a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="#tickets">Tickets</a></li>
+        </ul>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <div class="badge">Secure Your Access</div>
+            <h1 class="glitch-text">TICKETS</h1>
+            <p class="subtitle">Unreal Engine 6 Reveal — Vancouver Event Centre</p>
+        </div>
+    </section>
+
+    <section class="ticket-section" id="tickets">
+        <h2 class="section-title">/// SELECT YOUR DAYS</h2>
+
+        <div class="ticket-card" id="day1-card" onclick="toggleDay(1)">
+            <div class="ticket-header">
+                <div class="ticket-name">DAY ONE — KEYNOTE REVEAL</div>
+                <div class="ticket-price">$30.00</div>
+            </div>
+            <div class="ticket-desc">UE6 Keynote Reveal, Opening Ceremony, First Look Demos, and Developer Mixer. Witness the future of real-time 3D.</div>
+            <div class="ticket-meta">
+                <span class="meta-tag">KEYNOTE</span>
+                <span class="meta-tag">DEMO FLOOR</span>
+                <span class="meta-tag">NETWORKING</span>
+            </div>
+            <div class="ticket-checkbox">
+                <div class="custom-checkbox" id="cb-day1"></div>
+                <span class="checkbox-label">SELECT DAY ONE</span>
+            </div>
+            <div class="qty-control" id="qty-day1" style="display:none;">
+                <span class="qty-label">ATTENDEES:</span>
+                <button class="qty-btn" onclick="event.stopPropagation(); changeQty(1, -1)">−</button>
+                <span class="qty-display" id="qty-display-1">1</span>
+                <button class="qty-btn" onclick="event.stopPropagation(); changeQty(1, 1)">+</button>
+            </div>
+        </div>
+
+        <div class="ticket-card" id="day2-card" onclick="toggleDay(2)">
+            <div class="ticket-header">
+                <div class="ticket-name">DAY TWO — STUDIO SHOWCASE</div>
+                <div class="ticket-price">$30.00</div>
+            </div>
+            <div class="ticket-desc">AAA & Indie Studio Showcases, Playable Demos Floor, Technical Sessions, and Panel Discussions. Play games before anyone else.</div>
+            <div class="ticket-meta">
+                <span class="meta-tag">PLAYABLE DEMOS</span>
+                <span class="meta-tag">PANELS</span>
+                <span class="meta-tag">EXPO FLOOR</span>
+            </div>
+            <div class="ticket-checkbox">
+                <div class="custom-checkbox" id="cb-day2"></div>
+                <span class="checkbox-label">SELECT DAY TWO</span>
+            </div>
+            <div class="qty-control" id="qty-day2" style="display:none;">
+                <span class="qty-label">ATTENDEES:</span>
+                <button class="qty-btn" onclick="event.stopPropagation(); changeQty(2, -1)">−</button>
+                <span class="qty-display" id="qty-display-2">1</span>
+                <button class="qty-btn" onclick="event.stopPropagation(); changeQty(2, 1)">+</button>
+            </div>
+        </div>
+
+        <div class="ticket-card" id="day3-card" onclick="toggleDay(3)">
+            <div class="ticket-header">
+                <div class="ticket-name">DAY THREE — WORKSHOPS</div>
+                <div class="ticket-price">$30.00</div>
+            </div>
+            <div class="ticket-desc">Hands-on Workshops & Labs, Advanced Networking Sessions, Awards Ceremony, and Closing Party. Learn from the engine creators.</div>
+            <div class="ticket-meta">
+                <span class="meta-tag">WORKSHOPS</span>
+                <span class="meta-tag">AWARDS</span>
+                <span class="meta-tag">CLOSING PARTY</span>
+            </div>
+            <div class="ticket-checkbox">
+                <div class="custom-checkbox" id="cb-day3"></div>
+                <span class="checkbox-label">SELECT DAY THREE</span>
+            </div>
+            <div class="qty-control" id="qty-day3" style="display:none;">
+                <span class="qty-label">ATTENDEES:</span>
+                <button class="qty-btn" onclick="event.stopPropagation(); changeQty(3, -1)">−</button>
+                <span class="qty-display" id="qty-display-3">1</span>
+                <button class="qty-btn" onclick="event.stopPropagation(); changeQty(3, 1)">+</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="checkout-section">
+        <div class="checkout-card">
+            <h3 class="checkout-title">/// ORDER SUMMARY</h3>
+            <div id="checkout-content">
+                <div class="empty-state">
+                    <span class="empty-state-icon">◈</span>
+                    <div>SELECT AT LEAST ONE DAY TO PROCEED</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer style="position:relative;z-index:10;padding:50px;text-align:center;background:var(--deep-black);border-top:1px solid rgba(176,38,255,0.15);">
+        <div style="font-family:'Orbitron',sans-serif;font-size:1.4rem;color:var(--neon-purple);text-shadow:0 0 20px var(--neon-purple);margin-bottom:12px;letter-spacing:4px;">AN UNREAL EVENT</div>
+        <p style="color:rgba(224,224,224,0.4);letter-spacing:2px;font-size:0.85rem;font-family:'Share Tech Mono',monospace;">Vancouver Event Centre // Vancouver, BC</p>
+        <p style="color:rgba(224,224,224,0.3);margin-top:8px;font-size:0.8rem;font-family:'Share Tech Mono',monospace;">Powered by Epic Games // Unreal Engine 6</p>
+    </footer>
+
+    <script>
+        const PRICE_PER_DAY = 30;
+        const TAX_RATE = 0.12;
+        const MAX_QTY = 10;
+
+        let selections = {
+            1: { selected: false, qty: 1 },
+            2: { selected: false, qty: 1 },
+            3: { selected: false, qty: 1 }
+        };
+
+        const dayNames = {
+            1: 'Day One — Keynote Reveal',
+            2: 'Day Two — Studio Showcase',
+            3: 'Day Three — Workshops'
+        };
+
+        function toggleDay(day) {
+            selections[day].selected = !selections[day].selected;
+            updateUI();
+        }
+
+        function changeQty(day, delta) {
+            const newQty = selections[day].qty + delta;
+            if (newQty >= 1 && newQty <= MAX_QTY) {
+                selections[day].qty = newQty;
+                updateUI();
+            }
+        }
+
+        function formatCurrency(amount) {
+            return '$' + amount.toFixed(2);
+        }
+
+        function updateUI() {
+            // Update card states
+            for (let day = 1; day <= 3; day++) {
+                const card = document.getElementById('day' + day + '-card');
+                const cb = document.getElementById('cb-day' + day);
+                const qtyControl = document.getElementById('qty-day' + day);
+                const qtyDisplay = document.getElementById('qty-display-' + day);
+
+                if (selections[day].selected) {
+                    card.classList.add('selected');
+                    cb.classList.add('checked');
+                    qtyControl.style.display = 'flex';
+                } else {
+                    card.classList.remove('selected');
+                    cb.classList.remove('checked');
+                    qtyControl.style.display = 'none';
+                    selections[day].qty = 1;
+                }
+                qtyDisplay.textContent = selections[day].qty;
+            }
+
+            // Calculate totals
+            let subtotal = 0;
+            let selectedDays = 0;
+            let selectedItems = [];
+
+            for (let day = 1; day <= 3; day++) {
+                if (selections[day].selected) {
+                    const lineTotal = PRICE_PER_DAY * selections[day].qty;
+                    subtotal += lineTotal;
+                    selectedDays += selections[day].qty;
+                    selectedItems.push({
+                        name: dayNames[day],
+                        qty: selections[day].qty,
+                        lineTotal: lineTotal
+                    });
+                }
+            }
+
+            const tax = subtotal * TAX_RATE;
+            const total = subtotal + tax;
+
+            // Update checkout
+            const checkoutContent = document.getElementById('checkout-content');
+
+            if (selectedItems.length === 0) {
+                checkoutContent.innerHTML = `
+                    <div class="empty-state">
+                        <span class="empty-state-icon">◈</span>
+                        <div>SELECT AT LEAST ONE DAY TO PROCEED</div>
+                    </div>
+                `;
+                return;
+            }
+
+            let itemsHTML = '';
+            selectedItems.forEach(item => {
+                itemsHTML += `
+                    <div class="summary-row">
+                        <div class="label">${item.name} x${item.qty}</div>
+                        <div class="value">${formatCurrency(item.lineTotal)}</div>
+                    </div>
+                `;
+            });
+
+            checkoutContent.innerHTML = `
+                ${itemsHTML}
+                <div class="summary-row subtotal">
+                    <div class="label">SUBTOTAL</div>
+                    <div class="value">${formatCurrency(subtotal)}</div>
+                </div>
+                <div class="summary-row tax">
+                    <div class="label">TAX (PST + GST 12%)</div>
+                    <div class="value">${formatCurrency(tax)}</div>
+                </div>
+                <div class="tax-note">British Columbia combined sales tax rate applied</div>
+                <div class="summary-row total">
+                    <div class="label">TOTAL</div>
+                    <div class="value">${formatCurrency(total)}</div>
+                </div>
+                <button class="checkout-btn" onclick="checkout()">PROCEED TO CHECKOUT</button>
+            `;
+        }
+
+        function checkout() {
+            const btn = document.querySelector('.checkout-btn');
+            btn.textContent = 'PROCESSING...';
+            btn.disabled = true;
+            setTimeout(() => {
+                btn.textContent = 'ACCESS GRANTED';
+                btn.style.background = 'linear-gradient(135deg, var(--success), #00cc66)';
+                btn.style.boxShadow = '0 0 30px var(--success)';
+            }, 1500);
+        }
+
+        // Generate particles
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 40; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDuration = (Math.random() * 12 + 6) + 's';
+            particle.style.animationDelay = Math.random() * 6 + 's';
+            const colors = ['#b026ff', '#00d4ff', '#7b2cbf'];
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            particle.style.background = color;
+            particle.style.boxShadow = `0 0 10px ${color}`;
+            particlesContainer.appendChild(particle);
+        }
+    </script>
+</body>
+</html>

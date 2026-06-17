@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>An Unreal Event | Unreal Engine 6 Reveal — Vancouver</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-purple: #b026ff;
+            --neon-blue: #00d4ff;
+            --deep-black: #050508;
+            --dark-blue: #0a1128;
+            --mid-purple: #7b2cbf;
+            --grid-line: rgba(176, 38, 255, 0.12);
+            --engine-glow: rgba(0, 212, 255, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--deep-black);
+            color: #e0e0e0;
+            font-family: 'Rajdhani', sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Animated Grid Background */
+        .grid-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(var(--grid-line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+            background-size: 80px 80px;
+            perspective: 800px;
+            transform-style: preserve-3d;
+            animation: gridMove 25s linear infinite;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(80px); }
+        }
+
+        /* Floating particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--neon-purple);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--neon-purple), 0 0 16px var(--neon-purple);
+            animation: floatUp linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 18px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(5, 5, 8, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(176, 38, 255, 0.2);
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 900;
+            color: var(--neon-purple);
+            text-shadow: 0 0 20px var(--neon-purple);
+            letter-spacing: 4px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            border: 2px solid var(--neon-purple);
+            transform: rotate(45deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 15px var(--neon-purple);
+        }
+
+        .logo-icon span {
+            transform: rotate(-45deg);
+            font-size: 0.9rem;
+            font-weight: 900;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #e0e0e0;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--neon-blue);
+            box-shadow: 0 0 10px var(--neon-blue);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--neon-blue);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            z-index: 10;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            background: linear-gradient(to top, var(--deep-black), transparent);
+            z-index: 1;
+        }
+
+        /* Engine Core Visual */
+        .engine-core {
+            position: absolute;
+            top: 12%;
+            width: 280px;
+            height: 280px;
+            z-index: 1;
+        }
+
+        .engine-core::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--neon-purple) 0%, var(--mid-purple) 40%, transparent 70%);
+            opacity: 0.4;
+            animation: corePulse 3s ease-in-out infinite;
+        }
+
+        .engine-core::after {
+            content: 'UE6';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: var(--neon-blue);
+            text-shadow: 0 0 30px var(--neon-blue), 0 0 60px var(--neon-purple);
+            letter-spacing: 8px;
+        }
+
+        .core-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            border-radius: 50%;
+            animation: ringExpand 4s ease-out infinite;
+        }
+
+        .core-ring:nth-child(1) { width: 320px; height: 320px; animation-delay: 0s; }
+        .core-ring:nth-child(2) { width: 380px; height: 380px; animation-delay: 1.3s; }
+        .core-ring:nth-child(3) { width: 440px; height: 440px; animation-delay: 2.6s; }
+
+        @keyframes corePulse {
+            0%, 100% { transform: scale(1); opacity: 0.4; }
+            50% { transform: scale(1.1); opacity: 0.6; }
+        }
+
+        @keyframes ringExpand {
+            0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.8; border-color: var(--neon-blue); }
+            100% { transform: translate(-50%, -50%) scale(1.3); opacity: 0; border-color: var(--neon-purple); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            margin-top: 350px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 8px 24px;
+            border: 1px solid var(--neon-blue);
+            background: rgba(0, 212, 255, 0.08);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.85rem;
+            letter-spacing: 4px;
+            color: var(--neon-blue);
+            text-transform: uppercase;
+            margin-bottom: 25px;
+            animation: borderGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes borderGlow {
+            from { box-shadow: 0 0 8px rgba(0, 212, 255, 0.2), inset 0 0 8px rgba(0, 212, 255, 0.05); }
+            to { box-shadow: 0 0 20px rgba(0, 212, 255, 0.4), inset 0 0 15px rgba(0, 212, 255, 0.1); }
+        }
+
+        .glitch-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(2.5rem, 7vw, 6rem);
+            font-weight: 900;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 10px;
+            position: relative;
+            text-shadow: 
+                0 0 10px var(--neon-purple),
+                0 0 40px var(--neon-purple),
+                0 0 80px var(--neon-purple);
+            animation: glitch 4s infinite;
+        }
+
+        @keyframes glitch {
+            0%, 92%, 100% { text-shadow: 0 0 10px var(--neon-purple), 0 0 40px var(--neon-purple), 0 0 80px var(--neon-purple); }
+            93% { text-shadow: -3px 0 var(--neon-blue), 3px 0 var(--neon-purple); transform: translate(2px, -2px); }
+            94% { text-shadow: 3px 0 var(--neon-blue), -3px 0 var(--neon-purple); transform: translate(-2px, 2px); }
+            95% { text-shadow: -2px 0 var(--neon-purple), 2px 0 var(--neon-blue); transform: translate(1px, 1px); }
+            96% { text-shadow: 0 0 10px var(--neon-purple), 0 0 40px var(--neon-purple), 0 0 80px var(--neon-purple); transform: translate(0, 0); }
+        }
+
+        .subtitle {
+            font-size: clamp(1rem, 2.5vw, 1.6rem);
+            color: var(--neon-blue);
+            letter-spacing: 6px;
+            margin-top: 20px;
+            text-transform: uppercase;
+            text-shadow: 0 0 15px var(--neon-blue);
+            font-weight: 300;
+        }
+
+        .date-badge {
+            display: inline-block;
+            margin-top: 35px;
+            padding: 14px 40px;
+            border: 2px solid var(--neon-purple);
+            background: rgba(176, 38, 255, 0.08);
+            backdrop-filter: blur(5px);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1.1rem;
+            letter-spacing: 4px;
+            color: #fff;
+            text-shadow: 0 0 10px var(--neon-purple);
+        }
+
+        .location-pill {
+            margin-top: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 30px;
+            background: rgba(0, 212, 255, 0.08);
+            border: 1px solid var(--neon-blue);
+            border-radius: 50px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.95rem;
+            letter-spacing: 2px;
+            color: var(--neon-blue);
+            text-shadow: 0 0 10px var(--neon-blue);
+        }
+
+        .location-pill::before {
+            content: '◉';
+            color: var(--neon-purple);
+            font-size: 1rem;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+
+        .cta-btn {
+            margin-top: 45px;
+            padding: 18px 55px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: #fff;
+            background: linear-gradient(135deg, var(--neon-purple), var(--mid-purple));
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            clip-path: polygon(8% 0, 100% 0, 92% 100%, 0% 100%);
+            transition: all 0.3s;
+            text-shadow: 0 0 10px rgba(255,255,255,0.5);
+        }
+
+        .cta-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .cta-btn:hover::before {
+            left: 100%;
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 40px rgba(176, 38, 255, 0.5);
+        }
+
+        /* Info Cards Section */
+        .info-section {
+            position: relative;
+            z-index: 10;
+            padding: 100px 60px;
+            background: linear-gradient(180deg, transparent, var(--dark-blue) 20%, var(--deep-black) 100%);
+        }
+
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.2rem;
+            text-align: center;
+            margin-bottom: 60px;
+            color: #fff;
+            text-shadow: 0 0 20px var(--neon-blue);
+            letter-spacing: 5px;
+        }
+
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 35px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .info-card {
+            background: rgba(10, 17, 40, 0.7);
+            border: 1px solid rgba(176, 38, 255, 0.25);
+            padding: 40px 35px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s;
+            clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
+        }
+
+        .info-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--neon-purple), var(--neon-blue), var(--neon-purple));
+            background-size: 200% 100%;
+            animation: shimmer 3s linear infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .info-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--neon-blue);
+            box-shadow: 0 20px 60px rgba(0, 212, 255, 0.15);
+        }
+
+        .card-tag {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--neon-blue);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            opacity: 0.8;
+        }
+
+        .card-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            color: var(--neon-purple);
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+        }
+
+        .card-text {
+            color: rgba(224, 224, 224, 0.65);
+            line-height: 1.8;
+            font-size: 1rem;
+        }
+
+        .card-list {
+            margin-top: 15px;
+            list-style: none;
+        }
+
+        .card-list li {
+            color: rgba(224, 224, 224, 0.6);
+            padding: 6px 0;
+            padding-left: 20px;
+            position: relative;
+            font-size: 0.95rem;
+        }
+
+        .card-list li::before {
+            content: '>';
+            position: absolute;
+            left: 0;
+            color: var(--neon-blue);
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        /* Schedule Strip */
+        .schedule-strip {
+            position: relative;
+            z-index: 10;
+            padding: 80px 60px;
+            background: var(--deep-black);
+            border-top: 1px solid rgba(176, 38, 255, 0.15);
+            border-bottom: 1px solid rgba(176, 38, 255, 0.15);
+        }
+
+        .days-row {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            flex-wrap: wrap;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .day-block {
+            flex: 1;
+            min-width: 280px;
+            padding: 35px 30px;
+            text-align: center;
+            border: 1px solid rgba(0, 212, 255, 0.15);
+            background: rgba(0, 212, 255, 0.03);
+            position: relative;
+            transition: all 0.3s;
+            overflow: hidden;
+        }
+
+        .day-block::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--neon-purple), var(--neon-blue));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s;
+        }
+
+        .day-block:hover::before {
+            transform: scaleX(1);
+        }
+
+        .day-block:hover {
+            background: rgba(0, 212, 255, 0.06);
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.1);
+        }
+
+        .day-tag {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--neon-purple);
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+        }
+
+        .day-number {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.8rem;
+            font-weight: 900;
+            color: var(--neon-blue);
+            text-shadow: 0 0 20px var(--neon-blue);
+        }
+
+        .day-label {
+            font-size: 1.1rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: #fff;
+            margin-top: 8px;
+            font-weight: 500;
+        }
+
+        .day-desc {
+            margin-top: 15px;
+            color: rgba(224, 224, 224, 0.55);
+            font-size: 0.92rem;
+            line-height: 1.7;
+        }
+
+        /* Dev Showcase Section */
+        .dev-showcase {
+            position: relative;
+            z-index: 10;
+            padding: 100px 60px;
+            background: linear-gradient(180deg, var(--deep-black), var(--dark-blue), var(--deep-black));
+        }
+
+        .showcase-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .showcase-item {
+            padding: 30px;
+            border: 1px solid rgba(176, 38, 255, 0.15);
+            background: rgba(10, 17, 40, 0.5);
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .showcase-item:hover {
+            border-color: var(--neon-purple);
+            box-shadow: 0 0 25px rgba(176, 38, 255, 0.15);
+        }
+
+        .showcase-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .showcase-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            color: var(--neon-blue);
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .showcase-desc {
+            color: rgba(224, 224, 224, 0.55);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        footer {
+            position: relative;
+            z-index: 10;
+            padding: 60px;
+            text-align: center;
+            background: var(--deep-black);
+            border-top: 1px solid rgba(176, 38, 255, 0.15);
+        }
+
+        .footer-logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.6rem;
+            color: var(--neon-purple);
+            text-shadow: 0 0 20px var(--neon-purple);
+            margin-bottom: 15px;
+            letter-spacing: 4px;
+        }
+
+        .footer-text {
+            color: rgba(224, 224, 224, 0.4);
+            letter-spacing: 2px;
+            font-size: 0.85rem;
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        .social-links {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        .social-links a {
+            color: var(--neon-blue);
+            font-size: 1.4rem;
+            text-decoration: none;
+            transition: all 0.3s;
+            text-shadow: 0 0 10px var(--neon-blue);
+        }
+
+        .social-links a:hover {
+            color: var(--neon-purple);
+            text-shadow: 0 0 20px var(--neon-purple);
+            transform: scale(1.2);
+        }
+
+        /* Scanline effect */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.08),
+                rgba(0, 0, 0, 0.08) 1px,
+                transparent 1px,
+                transparent 3px
+            );
+            z-index: 9999;
+            pointer-events: none;
+            opacity: 0.25;
+        }
+
+        /* Terminal text effect */
+        .terminal-text {
+            font-family: 'Share Tech Mono', monospace;
+            color: var(--neon-blue);
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            opacity: 0.7;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                padding: 15px 20px;
+            }
+            .nav-links {
+                gap: 18px;
+            }
+            .nav-links a {
+                font-size: 0.75rem;
+                letter-spacing: 1px;
+            }
+            .hero-content {
+                margin-top: 160px;
+            }
+            .engine-core {
+                width: 200px;
+                height: 200px;
+            }
+            .engine-core::after {
+                font-size: 2.5rem;
+            }
+            .info-section, .schedule-strip, .dev-showcase {
+                padding: 60px 20px;
+            }
+            .core-ring:nth-child(1) { width: 240px; height: 240px; }
+            .core-ring:nth-child(2) { width: 290px; height: 290px; }
+            .core-ring:nth-child(3) { width: 340px; height: 340px; }
+        }
+    </style>
+<base target="_blank">
+</head>
+<body>
+    <div class="grid-bg"></div>
+    <div class="particles" id="particles"></div>
+    <div class="scanlines"></div>
+
+    <nav>
+        <div class="logo">
+            <div class="logo-icon"><span>U</span></div>
+            UNREAL EVENT
+        </div>
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#schedule">Schedule</a></li>
+            <li><a href="#devs">Devs</a></li>
+            <li><a href="tickets.html">Tickets</a></li>
+        </ul>
+    </nav>
+
+    <section class="hero" id="home">
+        <div class="engine-core">
+            <div class="core-ring"></div>
+            <div class="core-ring"></div>
+            <div class="core-ring"></div>
+        </div>
+        <div class="hero-content">
+            <div class="badge">Epic Games Official</div>
+            <h1 class="glitch-text">AN UNREAL EVENT</h1>
+            <p class="subtitle">Unreal Engine 6 Reveal & Developer Convention</p>
+            <div class="date-badge">3 DAYS // VANCOUVER EVENT CENTRE</div>
+            <br>
+            <div class="location-pill">Vancouver, British Columbia</div>
+        </div>
+    </section>
+
+    <section class="info-section" id="about">
+        <h2 class="section-title">/// WHAT TO EXPECT</h2>
+        <div class="cards-container">
+            <div class="info-card">
+                <div class="card-tag">[SYSTEM.REVEAL]</div>
+                <h3 class="card-title">UNREAL ENGINE 6</h3>
+                <p class="card-text">Be among the first to witness the next generation of real-time 3D creation. See UE6 in action with live demonstrations, technical deep-dives, and the first public gameplay footage running on the new engine.</p>
+                <ul class="card-list">
+                    <li>Live engine demonstration</li>
+                    <li>Technical architecture overview</li>
+                    <li>Performance benchmarks</li>
+                    <li>Q&A with Epic engineers</li>
+                </ul>
+            </div>
+            <div class="info-card">
+                <div class="card-tag">[SYSTEM.SHOWCASE]</div>
+                <h3 class="card-title">DEV SHOWCASE FLOOR</h3>
+                <p class="card-text">Top studios and indie developers reveal their upcoming titles built on Unreal Engine. Playable demos, behind-the-scenes talks, and exclusive first looks at games launching on UE5 and UE6.</p>
+                <ul class="card-list">
+                    <li>AAA studio presentations</li>
+                    <li>Indie developer spotlights</li>
+                    <li>Playable game demos</li>
+                    <li>Exclusive trailers & reveals</li>
+                </ul>
+            </div>
+            <div class="info-card">
+                <div class="card-tag">[SYSTEM.WORKSHOP]</div>
+                <h3 class="card-title">DEV WORKSHOPS</h3>
+                <p class="card-text">Hands-on sessions led by Epic's engineering team and industry veterans. Learn new workflows, optimization techniques, and advanced features from the creators of the engine themselves.</p>
+                <ul class="card-list">
+                    <li>Blueprint & C++ masterclasses</li>
+                    <li>Nanite & Lumen deep-dives</li>
+                    <li>Multiplayer & networking</li>
+                    <li>AI-assisted authoring tools</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="schedule-strip" id="schedule">
+        <h2 class="section-title">/// EVENT SEQUENCE</h2>
+        <div class="days-row">
+            <div class="day-block">
+                <div class="day-tag">PHASE_01</div>
+                <div class="day-number">01</div>
+                <div class="day-label">Day One</div>
+                <div class="day-desc">UE6 Keynote Reveal<br>Opening Ceremony<br>First Look Demos<br>Dev Mixer</div>
+            </div>
+            <div class="day-block">
+                <div class="day-tag">PHASE_02</div>
+                <div class="day-number">02</div>
+                <div class="day-label">Day Two</div>
+                <div class="day-desc">Studio Showcases<br>Playable Demos Floor<br>Technical Sessions<br>Panel Discussions</div>
+            </div>
+            <div class="day-block">
+                <div class="day-tag">PHASE_03</div>
+                <div class="day-number">03</div>
+                <div class="day-label">Day Three</div>
+                <div class="day-desc">Workshops & Labs<br>Networking Sessions<br>Awards Ceremony<br>Closing Party</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="dev-showcase" id="devs">
+        <h2 class="section-title">/// FEATURED TRACKS</h2>
+        <div class="showcase-grid">
+            <div class="showcase-item">
+                <span class="showcase-icon">🎮</span>
+                <h4 class="showcase-title">GAME DEMOS</h4>
+                <p class="showcase-desc">Play upcoming titles before anyone else. Hands-on stations across the expo floor.</p>
+            </div>
+            <div class="showcase-item">
+                <span class="showcase-icon">🎬</span>
+                <h4 class="showcase-title">CINEMATIC VFX</h4>
+                <p class="showcase-desc">See how UE6 pushes real-time rendering for film, TV, and virtual production.</p>
+            </div>
+            <div class="showcase-item">
+                <span class="showcase-icon">🤖</span>
+                <h4 class="showcase-title">AI TOOLS</h4>
+                <p class="showcase-desc">Explore AI-assisted authoring, procedural generation, and smart asset pipelines.</p>
+            </div>
+            <div class="showcase-item">
+                <span class="showcase-icon">🌐</span>
+                <h4 class="showcase-title">METAVERSE</h4>
+                <p class="showcase-desc">Persistent worlds, cross-platform ecosystems, and the future of connected experiences.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-logo">AN UNREAL EVENT</div>
+        <p class="footer-text">Vancouver Event Centre // Coquitlam, BC</p>
+        <p class="footer-text" style="margin-top: 8px;">Powered by Epic Games // Unreal Engine 6</p>
+        <p class="footer-text" style="margin-top: 15px; opacity: 0.5;">© 2026 // ALL SYSTEMS OPERATIONAL</p>
+        <div class="social-links">
+            <a href="#" title="Twitter">◉</a>
+            <a href="#" title="Discord">◈</a>
+            <a href="#" title="YouTube">◆</a>
+            <a href="#" title="GitHub">▣</a>
+        </div>
+    </footer>
+
+    <script>
+        // Generate floating particles
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 60; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDuration = (Math.random() * 12 + 6) + 's';
+            particle.style.animationDelay = Math.random() * 6 + 's';
+            particle.style.width = (Math.random() * 3 + 1) + 'px';
+            particle.style.height = particle.style.width;
+
+            const colors = ['#b026ff', '#00d4ff', '#7b2cbf'];
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            particle.style.background = color;
+            particle.style.boxShadow = `0 0 10px ${color}`;
+
+            particlesContainer.appendChild(particle);
+        }
+
+        // Smooth scroll for nav links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Parallax effect on scroll
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const core = document.querySelector('.engine-core');
+            if (core) {
+                core.style.transform = `translateY(${scrolled * 0.25}px)`;
+            }
+        });
+    </script>
+</body>
+</html>
