@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>An Unreal Event | Contact — Vancouver</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-purple: #b026ff;
+            --neon-blue: #00d4ff;
+            --deep-black: #050508;
+            --dark-blue: #0a1128;
+            --mid-purple: #7b2cbf;
+            --grid-line: rgba(176, 38, 255, 0.12);
+            --success: #00ff88;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--deep-black);
+            color: #e0e0e0;
+            font-family: 'Rajdhani', sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .grid-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image:
+                linear-gradient(var(--grid-line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+            background-size: 80px 80px;
+            animation: gridMove 25s linear infinite;
+            z-index: 0; pointer-events: none;
+        }
+        @keyframes gridMove { 0% { transform: translateY(0); } 100% { transform: translateY(80px); } }
+
+        .particles {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1; pointer-events: none; overflow: hidden;
+        }
+        .particle {
+            position: absolute; width: 2px; height: 2px;
+            background: var(--neon-purple); border-radius: 50%;
+            box-shadow: 0 0 8px var(--neon-purple);
+            animation: floatUp linear infinite;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            10% { opacity: 1; } 90% { opacity: 1; }
+            100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
+        }
+
+        nav {
+            position: fixed; top: 0; width: 100%;
+            padding: 18px 60px;
+            display: flex; justify-content: space-between; align-items: center;
+            z-index: 1000;
+            background: rgba(5, 5, 8, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(176, 38, 255, 0.2);
+        }
+        .logo {
+            font-family: 'Orbitron', sans-serif; font-size: 1.4rem; font-weight: 900;
+            color: var(--neon-purple); text-shadow: 0 0 20px var(--neon-purple);
+            letter-spacing: 4px; display: flex; align-items: center; gap: 12px;
+            text-decoration: none;
+        }
+        .logo-icon {
+            width: 32px; height: 32px; border: 2px solid var(--neon-purple);
+            transform: rotate(45deg); display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 0 15px var(--neon-purple);
+        }
+        .logo-icon span { transform: rotate(-45deg); font-size: 0.9rem; font-weight: 900; }
+        .nav-links { display: flex; gap: 40px; list-style: none; }
+        .nav-links a {
+            color: #e0e0e0; text-decoration: none; font-size: 0.95rem; font-weight: 500;
+            letter-spacing: 2px; text-transform: uppercase; position: relative; transition: color 0.3s;
+        }
+        .nav-links a::after {
+            content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 2px;
+            background: var(--neon-blue); box-shadow: 0 0 10px var(--neon-blue); transition: width 0.3s;
+        }
+        .nav-links a:hover { color: var(--neon-blue); }
+        .nav-links a:hover::after { width: 100%; }
+
+        .hero {
+            position: relative; height: 40vh; min-height: 280px;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; z-index: 10; overflow: hidden;
+        }
+        .hero::before {
+            content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 60%;
+            background: linear-gradient(to top, var(--deep-black), transparent); z-index: 1;
+        }
+        .hero-content { position: relative; z-index: 10; }
+        .badge {
+            display: inline-block; padding: 8px 24px; border: 1px solid var(--neon-blue);
+            background: rgba(0, 212, 255, 0.08);
+            font-family: 'Share Tech Mono', monospace; font-size: 0.85rem;
+            letter-spacing: 4px; color: var(--neon-blue); text-transform: uppercase; margin-bottom: 20px;
+        }
+        .glitch-text {
+            font-family: 'Orbitron', sans-serif; font-size: clamp(2rem, 5vw, 4rem); font-weight: 900;
+            color: #fff; text-transform: uppercase; letter-spacing: 8px;
+            text-shadow: 0 0 10px var(--neon-purple), 0 0 40px var(--neon-purple), 0 0 80px var(--neon-purple);
+        }
+        .subtitle {
+            font-size: 1.1rem; color: var(--neon-blue); letter-spacing: 4px; margin-top: 15px;
+            text-transform: uppercase; text-shadow: 0 0 15px var(--neon-blue); font-weight: 300;
+        }
+
+        .content-section {
+            position: relative; z-index: 10;
+            padding: 60px;
+            max-width: 1100px; margin: 0 auto;
+        }
+
+        .section-title {
+            font-family: 'Orbitron', sans-serif; font-size: 1.8rem;
+            text-align: center; margin-bottom: 50px;
+            color: #fff; text-shadow: 0 0 20px var(--neon-blue); letter-spacing: 4px;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .contact-grid { grid-template-columns: 1fr; }
+        }
+
+        .contact-card, .location-card {
+            background: rgba(10, 17, 40, 0.7);
+            border: 1px solid rgba(176, 38, 255, 0.25);
+            padding: 40px;
+            position: relative; overflow: hidden;
+            clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
+            transition: all 0.3s;
+        }
+        .contact-card::before, .location-card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px;
+            background: linear-gradient(90deg, var(--neon-purple), var(--neon-blue), var(--neon-purple));
+            background-size: 200% 100%; animation: shimmer 3s linear infinite;
+        }
+        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+        .contact-card:hover, .location-card:hover {
+            border-color: var(--neon-blue);
+            box-shadow: 0 10px 40px rgba(0, 212, 255, 0.1);
+        }
+
+        .card-tag {
+            font-family: 'Share Tech Mono', monospace; font-size: 0.75rem;
+            color: var(--neon-blue); letter-spacing: 3px; text-transform: uppercase;
+            margin-bottom: 20px; opacity: 0.8;
+        }
+        .card-title {
+            font-family: 'Orbitron', sans-serif; font-size: 1.3rem;
+            color: var(--neon-purple); margin-bottom: 25px; letter-spacing: 2px;
+        }
+
+        .contact-item {
+            display: flex; align-items: flex-start; gap: 18px;
+            padding: 18px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .contact-item:last-child { border-bottom: none; }
+        .contact-icon {
+            width: 44px; height: 44px;
+            border: 1px solid var(--neon-purple);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem; flex-shrink: 0;
+            box-shadow: 0 0 10px rgba(176, 38, 255, 0.2);
+        }
+        .contact-label {
+            font-family: 'Share Tech Mono', monospace; font-size: 0.75rem;
+            color: var(--neon-blue); letter-spacing: 2px; text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+        .contact-value {
+            font-size: 1.1rem; color: #fff; letter-spacing: 1px;
+        }
+        .contact-value a {
+            color: #fff; text-decoration: none; transition: color 0.3s;
+        }
+        .contact-value a:hover { color: var(--neon-blue); text-shadow: 0 0 10px var(--neon-blue); }
+
+        .location-info {
+            margin-bottom: 25px;
+        }
+        .location-line {
+            font-size: 1.05rem; color: rgba(224, 224, 224, 0.7);
+            line-height: 1.8; padding: 4px 0;
+        }
+        .location-line strong {
+            color: #fff; font-weight: 500;
+        }
+
+        .floorplan-container {
+            border: 2px solid rgba(176, 38, 255, 0.3);
+            background: rgba(0, 0, 0, 0.4);
+            padding: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+        .floorplan-container::before {
+            content: '/// VENUE FLOORPLAN';
+            position: absolute; top: 10px; left: 15px;
+            font-family: 'Share Tech Mono', monospace; font-size: 0.7rem;
+            color: var(--neon-blue); letter-spacing: 2px; z-index: 2;
+        }
+        .floorplan-img {
+            width: 100%; height: auto; display: block;
+            filter: brightness(0.95) contrast(1.05);
+            transition: filter 0.3s;
+        }
+        .floorplan-img:hover {
+            filter: brightness(1.05) contrast(1.1);
+        }
+
+        .hours-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px;
+        }
+        .hours-row {
+            display: flex; justify-content: space-between;
+            padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.06);
+            font-size: 0.95rem;
+        }
+        .hours-day { color: rgba(224, 224, 224, 0.6); font-family: 'Share Tech Mono', monospace; }
+        .hours-time { color: #fff; }
+
+        footer {
+            position: relative; z-index: 10;
+            padding: 50px; text-align: center;
+            background: var(--deep-black);
+            border-top: 1px solid rgba(176, 38, 255, 0.15);
+        }
+        .footer-logo {
+            font-family: 'Orbitron', sans-serif; font-size: 1.4rem;
+            color: var(--neon-purple); text-shadow: 0 0 20px var(--neon-purple);
+            margin-bottom: 12px; letter-spacing: 4px;
+        }
+        .footer-text {
+            color: rgba(224, 224, 224, 0.4); letter-spacing: 2px;
+            font-size: 0.85rem; font-family: 'Share Tech Mono', monospace;
+        }
+
+        .scanlines {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.08), rgba(0,0,0,0.08) 1px, transparent 1px, transparent 3px);
+            z-index: 9999; pointer-events: none; opacity: 0.25;
+        }
+
+        @media (max-width: 768px) {
+            nav { padding: 15px 20px; }
+            .nav-links { gap: 18px; }
+            .nav-links a { font-size: 0.75rem; letter-spacing: 1px; }
+            .content-section { padding: 30px 20px; }
+            .contact-card, .location-card { padding: 25px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-bg"></div>
+    <div class="particles" id="particles"></div>
+    <div class="scanlines"></div>
+
+    <nav>
+        <a href="index.html" class="logo">
+            <div class="logo-icon"><span>U</span></div>
+            UNREAL EVENT
+        </a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="tickets.html">Tickets</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <div class="badge">Get In Touch</div>
+            <h1 class="glitch-text">CONTACT</h1>
+            <p class="subtitle">Vancouver Event Centre — We're Here to Help</p>
+        </div>
+    </section>
+
+    <section class="content-section" id="contact">
+        <h2 class="section-title">/// REACH OUT</h2>
+        <div class="contact-grid">
+            <div class="contact-card">
+                <div class="card-tag">[SYSTEM.CONTACT]</div>
+                <h3 class="card-title">CONTACT INFO</h3>
+
+                <div class="contact-item">
+                    <div class="contact-icon">✉</div>
+                    <div>
+                        <div class="contact-label">Email</div>
+                        <div class="contact-value"><a href="mailto:info@anunrealevent.ca">info@anunrealevent.ca</a></div>
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <div class="contact-icon">☎</div>
+                    <div>
+                        <div class="contact-label">Phone</div>
+                        <div class="contact-value"><a href="tel:+16045551986">(604) 555-1986</a></div>
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <div class="contact-icon">◉</div>
+                    <div>
+                        <div class="contact-label">Address</div>
+                        <div class="contact-value">1055 Canada Place<br>Vancouver, BC V6C 0C3</div>
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <div class="contact-icon">◈</div>
+                    <div>
+                        <div class="contact-label">Social</div>
+                        <div class="contact-value" style="display:flex;gap:15px;margin-top:5px;">
+                            <a href="#" style="color:var(--neon-blue);">Twitter</a>
+                            <a href="#" style="color:var(--neon-blue);">Discord</a>
+                            <a href="#" style="color:var(--neon-blue);">YouTube</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="location-card">
+                <div class="card-tag">[SYSTEM.LOCATION]</div>
+                <h3 class="card-title">VENUE DETAILS</h3>
+                <div class="location-info">
+                    <div class="location-line"><strong>Vancouver Event Centre</strong></div>
+                    <div class="location-line">1055 Canada Place</div>
+                    <div class="location-line">Vancouver, British Columbia</div>
+                    <div class="location-line">V6C 0C3, Canada</div>
+                </div>
+
+                <div style="margin-bottom:15px;">
+                    <div class="contact-label" style="margin-bottom:10px;">EVENT HOURS</div>
+                    <div class="hours-grid">
+                        <div class="hours-row"><span class="hours-day">Day One</span><span class="hours-time">9:00 AM — 11:00 PM</span></div>
+                        <div class="hours-row"><span class="hours-day">Day Two</span><span class="hours-time">9:00 AM — 11:00 PM</span></div>
+                        <div class="hours-row"><span class="hours-day">Day Three</span><span class="hours-time">9:00 AM — 2:00 AM</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="content-section" style="padding-top:20px;">
+        <h2 class="section-title">/// VENUE FLOORPLAN</h2>
+        <div class="location-card" style="padding:20px;">
+            <div class="floorplan-container">
+                <img src="Floorplan.png" alt="Vancouver Event Centre Floorplan" class="floorplan-img">
+            </div>
+            <div style="margin-top:20px; display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:15px;">
+                <div style="padding:15px; border:1px solid rgba(176,38,255,0.2); background:rgba(176,38,255,0.05);">
+                    <div class="contact-label" style="margin-bottom:8px;">MAIN STAGE</div>
+                    <div style="font-size:0.95rem; color:rgba(224,224,224,0.6);">Keynote presentations and main ceremonies. Capacity: 5,000 attendees.</div>
+                </div>
+                <div style="padding:15px; border:1px solid rgba(0,212,255,0.2); background:rgba(0,212,255,0.05);">
+                    <div class="contact-label" style="margin-bottom:8px;">BOOTH ZONES A-D</div>
+                    <div style="font-size:0.95rem; color:rgba(224,224,224,0.6);">Developer showcases, playable demos, and studio presentations across four zones.</div>
+                </div>
+                <div style="padding:15px; border:1px solid rgba(176,38,255,0.2); background:rgba(176,38,255,0.05);">
+                    <div class="contact-label" style="margin-bottom:8px;">FOOD & BEVERAGE</div>
+                    <div style="font-size:0.95rem; color:rgba(224,224,224,0.6);">Catering area with local vendors and refreshments available throughout the event.</div>
+                </div>
+                <div style="padding:15px; border:1px solid rgba(0,212,255,0.2); background:rgba(0,212,255,0.05);">
+                    <div class="contact-label" style="margin-bottom:8px;">MERCHANDISE</div>
+                    <div style="font-size:0.95rem; color:rgba(224,224,224,0.6);">Official Unreal Event merchandise, Epic Games gear, and developer swag.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-logo">AN UNREAL EVENT</div>
+        <p class="footer-text">Vancouver Event Centre // Vancouver, BC</p>
+        <p class="footer-text" style="margin-top:8px; opacity:0.5;">Powered by Epic Games // Unreal Engine 6</p>
+    </footer>
+
+    <script>
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 40; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            p.style.left = Math.random() * 100 + '%';
+            p.style.animationDuration = (Math.random() * 12 + 6) + 's';
+            p.style.animationDelay = Math.random() * 6 + 's';
+            const colors = ['#b026ff', '#00d4ff', '#7b2cbf'];
+            p.style.background = colors[Math.floor(Math.random() * colors.length)];
+            p.style.boxShadow = `0 0 10px ${p.style.background}`;
+            particlesContainer.appendChild(p);
+        }
+    </script>
+</body>
+</html>
